@@ -1,0 +1,8 @@
+apiVersion: infra.nephio.io/v1alpha1
+kind: ClusterContext
+metadata:
+  name: cluster-context-1
+spec:
+  cniConfig:
+    cniType: "macvlan"
+    masterInterface: "bond0"
