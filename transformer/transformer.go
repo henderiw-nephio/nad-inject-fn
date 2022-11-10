@@ -51,15 +51,6 @@ func Run(rl *fn.ResourceList) (bool, error) {
 	// gathers the ip info from the ip-allocations
 	t.GatherInfo(rl)
 
-	/*
-		for epName, ep := range t.endPoints {
-			fmt.Printf("transformData: %s, prefix: %s, gateway: %s\n",
-				epName,
-				ep.prefix,
-				ep.gateway,
-			)
-		}
-	*/
 	// transforms the upf with the ip info collected/gathered
 	t.GenerateNad(rl)
 	return true, nil
