@@ -37,6 +37,7 @@ type SetNad struct {
 	cniType         string
 	masterInterface string
 	namespace       string
+	existingNads    map[string]int // element to kep track of update
 }
 
 type endPoint struct {
@@ -46,7 +47,8 @@ type endPoint struct {
 
 func Run(rl *fn.ResourceList) (bool, error) {
 	t := &SetNad{
-		endPoints: map[string]*endPoint{},
+		endPoints:    map[string]*endPoint{},
+		existingNads: map[string]int{},
 	}
 	// gathers the ip info from the ip-allocations
 	t.GatherInfo(rl)
@@ -57,7 +59,7 @@ func Run(rl *fn.ResourceList) (bool, error) {
 }
 
 func (t *SetNad) GatherInfo(rl *fn.ResourceList) {
-	for _, o := range rl.Items {
+	for i, o := range rl.Items {
 		// parse the node using kyaml
 		rn, err := yaml.Parse(o.String())
 		if err != nil {
@@ -76,14 +78,18 @@ func (t *SetNad) GatherInfo(rl *fn.ResourceList) {
 			t.masterInterface = infra.GetMasterInterface(rn)
 			t.namespace = rn.GetNamespace()
 		}
+		if rn.GetApiVersion() == "k8s.cni.cncf.io/v1" && rn.GetKind() == "NetworkAttachmentDefinition" {
+			t.existingNads[rn.GetName()] = i
+		}
 	}
 }
 
 func (t *SetNad) GenerateNad(rl *fn.ResourceList) {
 
 	for epName, ep := range t.endPoints {
+		nadName := strings.Join([]string{"upf", epName}, "-") // TODO make it a library
 		nadNode, err := nad.GetNadRnode(&nad.Config{
-			Name:       strings.Join([]string{"upf", epName}, "-"),
+			Name:       nadName,
 			Namespace:  t.namespace,
 			CniVersion: defaultCniVersion,
 			CniType:    t.cniType,
@@ -95,6 +101,12 @@ func (t *SetNad) GenerateNad(rl *fn.ResourceList) {
 			rl.Results = append(rl.Results, fn.ErrorConfigObjectResult(err, nadNode))
 		}
 
-		rl.Items = append(rl.Items, nadNode)
+		if i, ok := t.existingNads[nadName]; ok {
+			// exits -> replace
+			rl.Items[i] = nadNode
+		} else {
+			// add new entry
+			rl.Items = append(rl.Items, nadNode)
+		}
 	}
 }
