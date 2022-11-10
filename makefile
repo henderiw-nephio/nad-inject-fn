@@ -1,5 +1,5 @@
 VERSION ?= latest
-REGISTRY ?= henderiw
+REGISTRY ?= yndd
 IMG ?= $(REGISTRY)/nad-inject-fn:${VERSION}
 
 .PHONY: all
