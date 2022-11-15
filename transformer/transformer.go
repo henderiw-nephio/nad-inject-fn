@@ -17,6 +17,7 @@ limitations under the License.
 package transformer
 
 import (
+	"fmt"
 	"github/henderiw-nephio/nad-inject-fn/pkg/infra"
 	"github/henderiw-nephio/nad-inject-fn/pkg/ipam"
 	"github/henderiw-nephio/nad-inject-fn/pkg/nad"
@@ -53,6 +54,9 @@ func Run(rl *fn.ResourceList) (bool, error) {
 	// gathers the ip info from the ip-allocations
 	t.GatherInfo(rl)
 
+	fmt.Printf("cniType: %s\n", t.cniType)
+	fmt.Printf("mastreInterface: %s\n", t.masterInterface)
+
 	// transforms the upf with the ip info collected/gathered
 	t.GenerateNad(rl)
 	return true, nil
@@ -73,7 +77,7 @@ func (t *SetNad) GatherInfo(rl *fn.ResourceList) {
 				}
 			}
 		}
-		if rn.GetApiVersion() == "infra.nephio.io/v1alpha1" && rn.GetKind() == "ClusterContext" {
+		if rn.GetApiVersion() == "infra.nephio.org/v1alpha1" && rn.GetKind() == "ClusterContext" {
 			t.cniType = infra.GetCniType(rn)
 			t.masterInterface = infra.GetMasterInterface(rn)
 			t.namespace = rn.GetNamespace()
