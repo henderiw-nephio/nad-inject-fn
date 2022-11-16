@@ -5,6 +5,7 @@ metadata:
   labels:
     nephio.org/interface: n4
   name: upf-us-central1-n4
+  namespace: upf
 spec:
   kind: network
   selector:

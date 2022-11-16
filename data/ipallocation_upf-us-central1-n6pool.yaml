@@ -5,6 +5,7 @@ metadata:
   labels:
     nephio.org/interface: n6pool
   name: upf-us-central1-n6pool
+  namespace: upf
 spec:
   kind: pool
   prefixLength: 64
