@@ -33,14 +33,20 @@ spec:
 			"master": "{{.Master}}",
 			"mode": "bridge",
 			"ipam": {
-			"type": "static",
-			"routes": [
-				{
-					"dst": "0.0.0.0/0",
-					"gw": "{{.Gateway}}"
-				}
-			]
-		}
+				"type": "static",
+				"addresses": [
+          {
+            "address": "{{.IPPrefix}}",
+            "gateway": "{{.Gateway}}"
+          }
+        ],
+				"routes": [
+					{
+						"dst": "0.0.0.0/0",
+						"gw": "{{.Gateway}}"
+					}
+				]
+			}
 		}, {
 				"capabilities": { "mac": true },
 				"type": "tuning"
