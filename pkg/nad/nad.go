@@ -25,19 +25,19 @@ metadata:
   namespace: {{.Namespace}}
 spec:
   config: '{
-		"cniVersion": {{.CniVersion}},
+		"cniVersion": "{{.CniVersion}}",
 	"plugins": [
 		{
-			"type": {{.CniType}},
+			"type": "{{.CniType}}",
 			"capabilities": { "ips": true },
-			"master": {{.Master}},
+			"master": "{{.Master}}",
 			"mode": "bridge",
 			"ipam": {
 			"type": "static",
 			"routes": [
 				{
 					"dst": "0.0.0.0/0",
-					"gw": {{.Gateway}}
+					"gw": "{{.Gateway}}"
 				}
 			]
 		}
