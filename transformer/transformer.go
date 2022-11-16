@@ -76,11 +76,11 @@ func (t *SetNad) GatherInfo(rl *fn.ResourceList) {
 					gateway: ipam.GetGateway(rn),
 				}
 			}
+			t.namespace = rn.GetNamespace()
 		}
 		if rn.GetApiVersion() == "infra.nephio.org/v1alpha1" && rn.GetKind() == "ClusterContext" {
 			t.cniType = infra.GetCniType(rn)
 			t.masterInterface = infra.GetMasterInterface(rn)
-			t.namespace = rn.GetNamespace()
 		}
 		if rn.GetApiVersion() == "k8s.cni.cncf.io/v1" && rn.GetKind() == "NetworkAttachmentDefinition" {
 			t.existingNads[rn.GetName()] = i
