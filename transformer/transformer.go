@@ -38,6 +38,8 @@ type SetNad struct {
 	cniType         string
 	masterInterface string
 	namespace       string
+	upfDeploymentName string
+
 	existingNads    map[string]int // element to kep track of update
 }
 
@@ -69,9 +71,12 @@ func (t *SetNad) GatherInfo(rl *fn.ResourceList) {
 		if err != nil {
 			rl.Results = append(rl.Results, fn.ErrorConfigObjectResult(err, o))
 		}
+		if rn.GetApiVersion() == "nf.nephio.org/v1alpha1" && rn.GetKind() == "UPFDeployment" {
+			t.upfDeploymentName = rn.GetName()
+		}
 		if rn.GetApiVersion() == "ipam.nephio.org/v1alpha1" && rn.GetKind() == "IPAllocation" {
 			if ipam.GetPrefixKind(rn) == string(ipamv1alpha1.PrefixKindNetwork) {
-				t.endPoints[rn.GetName()] = &endPoint{
+				t.endPoints[rn.GetLabels()["nephio.org/interface"]] = &endPoint{
 					prefix:  ipam.GetPrefix(rn),
 					gateway: ipam.GetGateway(rn),
 				}
@@ -91,7 +96,7 @@ func (t *SetNad) GatherInfo(rl *fn.ResourceList) {
 func (t *SetNad) GenerateNad(rl *fn.ResourceList) {
 
 	for epName, ep := range t.endPoints {
-		nadName := strings.Join([]string{"upf", epName}, "-") // TODO make it a library
+		nadName := strings.Join([]string{t.upfDeploymentName, epName}, "-") // TODO make it a library
 		nadNode, err := nad.GetNadRnode(&nad.Config{
 			Name:       nadName,
 			Namespace:  t.namespace,
