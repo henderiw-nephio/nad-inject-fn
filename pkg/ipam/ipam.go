@@ -25,5 +25,5 @@ func GetGateway(source *kyaml.RNode) string {
 }
 
 func GetPrefix(source *kyaml.RNode) string {
-	return GetValue(source, "status.prefix")
+	return GetValue(source, "status.allocatedprefix")
 }
