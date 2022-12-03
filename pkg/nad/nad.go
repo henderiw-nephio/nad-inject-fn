@@ -26,32 +26,27 @@ metadata:
 spec:
   config: '{
 		"cniVersion": "{{.CniVersion}}",
-	"plugins": [
-		{
-			"type": "{{.CniType}}",
-			"capabilities": { "ips": true },
-			"master": "{{.Master}}",
-			"mode": "bridge",
-			"ipam": {
-				"type": "static",
-				"addresses": [
-          {
-            "address": "{{.IPPrefix}}",
-            "gateway": "{{.Gateway}}"
-          }
-        ],
-				"routes": [
-					{
-						"dst": "0.0.0.0/0",
-						"gw": "{{.Gateway}}"
-					}
-				]
-			}
-		}, {
+		"plugins": [
+			{
+				"type": "{{.CniType}}",
+				"capabilities": { "ips": true },
+				"master": "{{.Master}}",
+				"mode": "bridge",
+				"ipam": {
+					"type": "static",
+					"addresses": [
+						{
+							"address": "{{.IPPrefix}}",
+							"gateway": "{{.Gateway}}"
+						}
+					]
+				}
+			}, 
+			{
 				"capabilities": { "mac": true },
 				"type": "tuning"
-		}
-	]
+			}
+		]
 	}'
 `
 

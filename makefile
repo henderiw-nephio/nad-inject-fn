@@ -14,7 +14,7 @@ vet: ## Run go vet against code.
 test: fmt vet ## Run tests.
 	kpt fn render data
 
-docker-build: test ## Build docker images.
+docker-build:  ## Build docker images.
 	docker build -t ${IMG} .
 
 docker-push: ## Build docker images.

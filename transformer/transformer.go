@@ -17,7 +17,6 @@ limitations under the License.
 package transformer
 
 import (
-	"fmt"
 	"github/henderiw-nephio/nad-inject-fn/pkg/infra"
 	"github/henderiw-nephio/nad-inject-fn/pkg/ipam"
 	"github/henderiw-nephio/nad-inject-fn/pkg/nad"
@@ -34,13 +33,13 @@ const (
 
 // SetNad contains the information to perform the mutator function on a package
 type SetNad struct {
-	endPoints       map[string]*endPoint
-	cniType         string
-	masterInterface string
-	namespace       string
+	endPoints         map[string]*endPoint
+	cniType           string
+	masterInterface   string
+	namespace         string
 	upfDeploymentName string
 
-	existingNads    map[string]int // element to kep track of update
+	existingNads map[string]int // element to kep track of update
 }
 
 type endPoint struct {
@@ -56,8 +55,8 @@ func Run(rl *fn.ResourceList) (bool, error) {
 	// gathers the ip info from the ip-allocations
 	t.GatherInfo(rl)
 
-	fmt.Printf("cniType: %s\n", t.cniType)
-	fmt.Printf("mastreInterface: %s\n", t.masterInterface)
+	//fmt.Printf("cniType: %s\n", t.cniType)
+	//fmt.Printf("mastreInterface: %s\n", t.masterInterface)
 
 	// transforms the upf with the ip info collected/gathered
 	t.GenerateNad(rl)
